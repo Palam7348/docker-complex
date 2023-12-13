@@ -33,8 +33,8 @@ jobs:
         password: 3jZMD6HdWBlLIILX6taASz0NJhXF1JMP5Gje0b0k6N+ACRD+/Pn2
     - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
     - run: |
-        docker build -t dockercourse.azurecr.io/complex_client:${{ github.sha }} ./client
-        docker push dockercourse.azurecr.io/complex_client:${{ github.sha }}     
+        docker build -t dockercourse.azurecr.io/complex_client ./client
+        docker push dockercourse.azurecr.io/complex_client    
     - run: |
         docker build -t dockercourse.azurecr.io/complex_nginx ./nginx
         docker push dockercourse.azurecr.io/complex_nginx 
