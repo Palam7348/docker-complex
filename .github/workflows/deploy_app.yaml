@@ -1,0 +1,67 @@
+name: Deploy Container Image to Azure App Service
+
+on:
+  workflow_dispatch:
+
+permissions:
+      id-token: write
+      contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    # defaults:
+    #   run:
+    #     shell: bash
+    #     working-directory: dotnet
+    steps:
+    # checkout the repo
+    - name: 'Checkout GitHub Action' 
+      uses: actions/checkout@main
+    
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        client-id: 57dfcb36-a2cb-44bd-9769-79168516f3bd
+        tenant-id: ca0a89e1-2de3-4e6f-af1a-1cf242e031e1
+        subscription-id: e374b881-e663-4748-bb39-50be7cfdaca9
+    
+    - uses: azure/docker-login@v1
+      with:
+        login-server: dockercourse.azurecr.io
+        username: dockercourse
+        password: 3jZMD6HdWBlLIILX6taASz0NJhXF1JMP5Gje0b0k6N+ACRD+/Pn2
+    - run: |
+        docker build ./client -t dockercourse.azurecr.io/complex_client
+        docker push dockercourse.azurecr.io/complex_client     
+    - run: |
+        docker build ./nginx -t dockercourse.azurecr.io/complex_nginx
+        docker push dockercourse.azurecr.io/complex_nginx 
+    - run: |
+        docker build ./server -t dockercourse.azurecr.io/complex_server
+        docker push dockercourse.azurecr.io/complex_server 
+    - run: |
+        docker build ./worker -t dockercourse.azurecr.io/complex_worker
+        docker push dockercourse.azurecr.io/complex_worker     
+
+    # - run: |
+    #     docker build ./client -t dockercourse.azurecr.io/complex_client:${{ github.sha }}
+    #     docker push dockercourse.azurecr.io/complex_client:${{ github.sha }}     
+    # - run: |
+    #     docker build ./nginx -t dockercourse.azurecr.io/complex_nginx:${{ github.sha }}
+    #     docker push dockercourse.azurecr.io/complex_nginx:${{ github.sha }} 
+    # - run: |
+    #     docker build ./server -t dockercourse.azurecr.io/complex_server:${{ github.sha }}
+    #     docker push dockercourse.azurecr.io/complex_server:${{ github.sha }} 
+    # - run: |
+    #     docker build ./worker -t dockercourse.azurecr.io/complex_worker:${{ github.sha }}
+    #     docker push dockercourse.azurecr.io/complex_worker:${{ github.sha }}    
+      
+    # - uses: azure/webapps-deploy@v2
+    #   with:
+    #     app-name: 'docker-course'
+    #     images: 'dockercourse.azurecr.io/myapp:${{ github.sha }}'
+    
+    - name: Azure logout
+      run: |
+        az logout
