@@ -11,20 +11,17 @@ services:
       - api
       - client
     restart: always
-    image: dockercourse.azurecr.io/complex_nginx
+    image: dockercourse.azurecr.io/complex_nginx:latest
     build:
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
       context: ./nginx
     ports:
       - "3050:80"
   api:
-    image: dockercourse.azurecr.io/complex_server
+    image: dockercourse.azurecr.io/complex_server:latest
     build:
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
       context: ./server
-    volumes:
-      - /app/node_modules
-      - ./server:/app
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -34,23 +31,17 @@ services:
       - PGPASSWORD=postgres_password
       - PGPORT=5432
   client:
-    image: dockercourse.azurecr.io/complex_client
+    image: dockercourse.azurecr.io/complex_client:latest
     environment:
       - WDS_SOCKET_PORT=0
     build:
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
       context: ./client
-    volumes:
-      - /app/node_modules
-      - ./client:/app
   worker:
-    image: dockercourse.azurecr.io/complex_worker
+    image: dockercourse.azurecr.io/complex_worker:latest
     build:
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
       context: ./worker
-    volumes:
-      - /app/node_modules
-      - ./worker:/app
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
