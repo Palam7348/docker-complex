@@ -22,7 +22,7 @@ function App() {
           </a>
           <Link to="/">Home</Link>
           <Link to="/otherpage">Other Page</Link>
-          <Link to="/onemorepage">One More Page</Link>
+          <Link to="/onemorepage">One More Page (Updated)</Link>
         </header>
         <div>
           <Route exact path="/" component={Fib} />
